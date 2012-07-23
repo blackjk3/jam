@@ -1,136 +1,128 @@
 var fs    = require('fs'),
   sys = require('util'),
-  Path = require('path'),
+  path = require('path'),
   cssom = require('cssom'),
   jsdom = require('jsdom'),
   async = require('async'),
+  https = require('https'),
+  http = require('http'),
+  urlLib = require('url'),
+  events = require('events'),
+  wrench = require('wrench'),
+  eventEmitter = new events.EventEmitter(),
   _     = require('underscore'),
+  commands = require('./lib/commands'),
   jaws_root = __dirname,
-  root = process.cwd();
+  root = process.cwd(),
+  vendorPath = "js/vendor/";
 
-var viewHelpers = {
-  capitalize: function( str ) {
-    return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
-  }
-};
+commands.root = root;
+commands.jaws_root = __dirname;
 
 //
 // private helpers
 //
 function readFile( path, cb ) {
     fs.readFile(path, function(err, data) {
-        if (err) cb(err)
-        else cb(null, data.toString('utf8'))
-    })
+      if(err) {
+        console.error("Could not open file: ", path);
+        process.exit(1);
+      } else {
+        cb( data.toString('utf8'));
+      }
+    });
 }
 
-// function getViewFramework( f ) {
+function downloadBundle( url, path, key, version ) {
+  var self = this;
+  var parts = urlLib.parse(url);
+  var protocol = parts.protocol === 'https:' ? https : http;
+  var writeStream = fs.createWriteStream( path );
 
-//   if ( f === 'backbone' ) {
-//      Load backbone template
-    
-//   }
+  protocol.get(parts, function (response) {
+    try {
+      if (response.statusCode === 200) {
+        response.pipe( writeStream );
 
-// }
-
-function raise ( error ) {
-  sys.puts(error);
-  process.exit();
+        writeStream.on('close', function () {
+          var versionStr = version ? ' (' + version + ')' : '';
+          sys.puts (" * Using " + key + versionStr);
+        });
+      }
+    } catch (e) {
+      console.error("Could not download file: ", url);
+    }
+  });
 }
 
-/**
- * newProject
- * @return {[null]} [Creates a new project with directory and all]
- */
+function getRepositories() {
+  var url = 'https://raw.github.com/blackjk3/jaws/master/repos/repos.json';
+  var self = this;
+  //var writeStream = fs.createWriteStream( 'js/vendor/testing.js' );
+  var parts = urlLib.parse(url);
 
-function newProject () {
+  https.get(parts, function (response) {
 
-  var dirs;
+    try {
+      if (response.statusCode === 200) {
 
-  project = arguments[0] || raise("Must supply a name for new project.");
-  dirs = ["", "spec", "spec/jasmine", "spec/models", "spec/routers", "spec/views", "js", "js/app", "js/app/vendor", "js/app/views", "js/app/templates", "js/app/routers", "js/app/models", "js/app/helpers", "css", "spec/fixtures"];
+        var data = '';
 
-  dirs.forEach(function(dir) {
-    fs.mkdirSync( project + "/" + dir, 0755 );
+        response.on('data', function (chunk){
+            data += chunk;
+        });
+
+        response.on('end',function(){
+            var obj = JSON.parse(data);
+            eventEmitter.emit('repo', obj);
+        });
+      }
+    } catch (e) {
+      // d.reject(e);
+    }
+  });
+}
+
+function bundle() {
+  var packagePath = process.cwd() + '/package.json',
+      repos;
+
+  readFile( packagePath, function( data ) {
+    repos = JSON.parse(data).jaws.dependencies;
+    getRepositories();
   });
 
-  sys.puts (" * Creating directory structure");
+  eventEmitter.on('repo', function( repoList ) {
+    var repoJSON = repoList.repositories;
+    processDependencies(repos, repoJSON);
+  });
 }
 
-/**
- * newView
- * @return {[null]} [Creates a new view based on template]
- */
-
-function newView() {
-  var view = arguments[0] || raise("Must supply a name for the view");
-
-  var data = { view: view };
-  view = view.toLowerCase();
-  sys.puts (" * Creating new view: " + view);
-
-  var copyFile = function ( from, to ) {
-    var ejs = fs.readFileSync(from).toString();
-    
-    _.extend( data, viewHelpers );
-    fs.writeFileSync( Path.join(root, to), _.template(ejs, data) );
-    sys.puts(" * Created: " + to);
-  };
-  
-  if ( !Path.existsSync("js/app/views/") ) {
-    fs.mkdirSync( "js/app/views/", 0755 );
-  }
-
-  if ( !Path.existsSync("js/app/templates/") ) {
-    fs.mkdirSync( "js/app/templates/", 0755 );
-  }
-
-  if ( !Path.existsSync("js/app/helpers/") ) {
-    fs.mkdirSync( "js/app/helpers/", 0755 );
-  }
-
-  copyFile( jaws_root + "/templates/views/backbone-view.js", "js/app/views/" + view + ".js" );
-  copyFile( jaws_root + "/templates/templates/template.html", "js/app/templates/" + view + ".html" );
-  copyFile( jaws_root + "/templates/helpers/helper.js", "js/app/helpers/" + view + "_helper.js" );
+function refreshVendorFolder() {
+  wrench.rmdirSyncRecursive(vendorPath);
+  fs.mkdirSync( vendorPath, 0755 );
 }
 
-/**
- * newModel
- * @return {[null]} [Creates a new model based on template]
- */
+function processDependencies( repos, repoList ) {
 
-function newModel() {
-  var model = arguments[0] || raise("Must supply a name for the model");
+  // Refresh vendor
+  refreshVendorFolder();
 
-  if ( !Path.existsSync("js/app/models/") ) {
-    fs.mkdirSync( "js/app/models/", 0755 );
-  }
-
-  var copyFile = function ( from, to ) {
-    var ejs = fs.readFileSync(from).toString();
-    
-    fs.writeFileSync( Path.join(root, to), _.template(ejs, model) );
-    sys.puts(" * Created: " + to);
-  };
-
-  copyFile( jaws_root + "/templates/model/backbone-model.js", "js/app/model/" + model + ".js" );
-}
-
-function newRouter() {
-  var router = arguments[0] || raise("Must supply a name for the router");
-
-  if ( !Path.existsSync("js/app/routers/") ) {
-    fs.mkdirSync( "js/app/routers/", 0755 );
-  }
-
-  var copyFile = function ( from, to ) {
-    var ejs = fs.readFileSync(from).toString();
-    
-    fs.writeFileSync( Path.join(root, to), _.template(ejs, router) );
-    sys.puts(" * Created: " + to);
-  };
-
-  copyFile( jaws_root + "/templates/routers/backbone-router.js", "js/app/routers/" + router + ".js" );
+  _.each(repos, function(version, key) {
+    path.exists(vendorPath + key + '.js', function(exists) {
+      var url, path;
+      
+      if(!exists) {
+        if( repoList[key] ) {
+          url = repoList[key].url.replace('{version}', version);
+          path = repoList[key].versioned ? key + '-' + version + '.js' : key + '.js';
+          downloadBundle( url, vendorPath + path, key, version );
+        } else {
+          sys.puts (" * Could not find library " + key + '. Please add the path manually to package.json');
+        }
+      }
+    });
+  });
 }
 
 /**
@@ -156,6 +148,7 @@ module.exports = {
           .option('new, --new <name>', 'Generates a new project.')
           .option('g, --generate <framework>:<type> <name>', 'Generates a new model or view.')
           .option('watch, --watch <path>', 'Watches project for recompile changes.')
+          .option('bundle, --bundle', 'Updates dependencies based on package.json file.')
           .parse(process.argv);
         
         if ( process.argv.length === 2 ) {
@@ -164,18 +157,20 @@ module.exports = {
         else {
           
           if ( program.new ) {
-            newProject( program.new );
+            commands.newProject( program.new );
           }
           else if ( program.generate ) {
-            //var framework = getViewFramework( program.framework );
             if ( program.generate === 'view' ) {
-              newView( program.args[0] );
+              commands.newView( program.args[0] );
             } else if ( program.generate === 'model' ) {
-              newModel( program.args[0] );
+              commands.newModel( program.args[0] );
             }
           }
           else if ( program.watch ) {
             watchProject();
+          }
+          else if ( program.bundle ) {
+            bundle();
           }
         }
     }

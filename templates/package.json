@@ -1,0 +1,9 @@
+{
+  "jaws": {
+    "baseUrl": "www/js",
+    
+    "dependencies": {
+      "jquery": "1.7.1"
+    }
+  }
+}
