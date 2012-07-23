@@ -1,0 +1,45 @@
+{
+  "author": "Jason Kadrmas <blackjk@gmail.com> (http://kadrmasconcepts.com/blog/) @itooamaneatguy",
+  "name": "jaws",
+  "description": "JavaScript Application Web Stack - Repositories",
+  "version": "0.0.1",
+  "repositories": {
+    
+    "jquery" : {
+      "github": "jquery/jquery",
+      "url": "http://code.jquery.com/jquery-{version}.js",
+      "min": "http://code.jquery.com/jquery-{version}.min.js",
+      "versioned": true 
+    },
+    "backbone" : {
+      "github": "documentcloud/backbone",
+      "url": "https://raw.github.com/documentcloud/backbone/{version}/backbone.js",
+      "min": "https://raw.github.com/documentcloud/backbone/{version}/backbone-min.js",
+      "versioned": true 
+    },
+    "underscore" : {
+      "github": "documentcloud/underscore",
+      "url": "https://raw.github.com/documentcloud/underscore/{version}/underscore.js",
+      "min": "https://raw.github.com/documentcloud/underscore/{version}/underscore-min.js",
+      "versioned": true 
+    }, 
+    "ember" : {
+      "github": "emberjs/ember.js",
+      "url": "https://github.com/downloads/emberjs/ember.js/ember-{version}.js",
+      "min": "https://github.com/downloads/emberjs/ember.js/ember-{version}.min.js",
+      "versioned": true 
+    },
+    "zepto" : {
+      "github": "madrobby/zepto",
+      "url": "http://zeptojs.com/zepto.js",
+      "min": "http://zeptojs.com/zepto.min.js",
+      "versioned": false
+    },
+    "three.js" : {
+      "github": "mrdoob/three.js",
+      "url": "https://raw.github.com/mrdoob/three.js/{version}/build/Three.js",
+      "min": "https://raw.github.com/mrdoob/three.js/{version}/build/Three.js",
+      "versioned": false
+    }
+  }
+}

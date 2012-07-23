@@ -1,0 +1,15 @@
+{
+  "author": "Jason Kadrmas <blackjk@gmail.com> (http://kadrmasconcepts.com/blog/)",
+  "name": "jaws",
+  "description": "JavaScript Application Web Stack",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blackjk3/jaws.git"
+  },
+  "engines": {
+    "node": "~0.6.1"
+  },
+  "dependencies": { "async":"0.1.18", "commander":"0.6.0", "cssom":"0.2.3", "jsdom":"0.2.14", "underscore":"1.3.3" },
+  "devDependencies": { "should":"0.6.3" }
+}
