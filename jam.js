@@ -26,27 +26,6 @@ function readFile( path, cb ) {
     });
 }
 
-// function download( url, path ) {
-//   var parts = urlLib.parse(url);
-//   var protocol = parts.protocol === 'https:' ? https : http;
-//   var writeStream = fs.createWriteStream( path );
-
-//   protocol.get(parts, function (response) {
-//     try {
-//       if (response.statusCode === 200) {
-//         response.pipe( writeStream );
-
-//         writeStream.on('close', function () {
-//           var versionStr = version ? ' (' + version + ')' : '';
-//           sys.puts (" * Added to " + key + versionStr);
-//         });
-//       }
-//     } catch (e) {
-//       console.error("Could not download file: ", url);
-//     }
-//   });
-// }
-
 /**
  * watchProject()
  * @return {[null]} [Creates a new view based on template]
@@ -72,6 +51,7 @@ module.exports = {
           .option('watch, --watch <path>', 'Watches project for recompile changes.')
           .option('bundle, --bundle', 'Updates dependencies based on package.json file.')
           .option('add, --add', 'Adds a dependency into the current directory.')
+          .option('-m, --minified', 'Get minified version from add.')
           .parse(process.argv);
         
         if ( process.argv.length === 2 ) {
@@ -96,22 +76,22 @@ module.exports = {
             bundler.bundle();
           }
           else if ( program.add ) {
-            var key = program.args[0];
-
-            bundler.getRepoList().then(function(repoList) {
-              var results = bundler.searchRepoList( key, repoList.repositories );
-              if( results ) {
-                if( results.versioned ) {
-                  github.latestTag( results.github ).then(function (lastestTag) {
-                    var url = results.url.replace('{version}', lastestTag),
-                        path = results.versioned ? key + '-' + lastestTag + '.js' : key + '.js';
-                    
-                    bundler.download( url, root + '/' + path );
-                    sys.puts(" Downloading " + key + " to " + root);
-                  });
-                }
+            var optPath = '',
+                min = program.minified ?  true : false;
+            
+            bundler.onRails().then(function( rails ) {
+              if ( rails ) {
+                program.confirm('Detected rails. Do you want to put file in vendor/assets/javascripts? ', function( ok ) {
+                  
+                  if ( ok ) {
+                    optPath = 'vendor/assets/javascripts/';
+                  }
+                  
+                  bundler.add( program.args[0], min, optPath );
+                  process.stdin.destroy();
+                });
               } else {
-                sys.puts (" * Could not find library " + key + '.  Please contact @itooamaneatguy to get this repo added.  Or submit a pull request to https://github.com/blackjk3/jaws.');
+                bundler.add( program.args[0], min );
               }
             });
           }
