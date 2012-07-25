@@ -8,7 +8,7 @@
     "url": "git://github.com/blackjk3/jaws.git"
   },
   "engines": {
-    "node": "~0.6.1"
+    "node": "~0.8.4"
   },
   "dependencies": { 
     "async":"0.1.18", 
