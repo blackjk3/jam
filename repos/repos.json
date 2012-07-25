@@ -5,16 +5,22 @@
   "version": "0.0.1",
   "repositories": {
     
-    "jquery" : {
-      "github": "jquery/jquery",
-      "url": "http://code.jquery.com/jquery-{version}.js",
-      "min": "http://code.jquery.com/jquery-{version}.min.js",
-      "versioned": true 
-    },
     "backbone" : {
       "github": "documentcloud/backbone",
       "url": "https://raw.github.com/documentcloud/backbone/{version}/backbone.js",
       "min": "https://raw.github.com/documentcloud/backbone/{version}/backbone-min.js",
+      "versioned": true 
+    },
+    "chosen" : {
+      "github": "harvesthq/chosen",
+      "url": "https://raw.github.com/harvesthq/chosen/{version}/chosen.jquery.js",
+      "min": "https://raw.github.com/harvesthq/chosen/{version}/chosen.jquery.min.js",
+      "versioned": true 
+    },
+    "jquery" : {
+      "github": "jquery/jquery",
+      "url": "http://code.jquery.com/jquery-{version}.js",
+      "min": "http://code.jquery.com/jquery-{version}.min.js",
       "versioned": true 
     },
     "underscore" : {
