@@ -46,6 +46,24 @@
       "url": "https://raw.github.com/mrdoob/three.js/{version}/build/Three.js",
       "min": "https://raw.github.com/mrdoob/three.js/{version}/build/Three.js",
       "versioned": false
+    },
+    "lodash" : {
+      "github": "bestiejs/lodash",
+      "url": "https://raw.github.com/bestiejs/lodash/{version}/lodash.js",
+      "min": "https://raw.github.com/bestiejs/lodash/{version}/lodash.min.js",
+      "versioned": true
+    },
+    "moment" : {
+      "github": "timrwood/moment",
+      "url": "https://raw.github.com/timrwood/moment/{version}/moment.js",
+      "min": "https://raw.github.com/timrwood/moment/{version}/min/moment.min.js",
+      "versioned": true
+    },
+    "select2" : {
+      "github": "ivaynberg/select2",
+      "url": "https://raw.github.com/ivaynberg/select2/{version}/select2.js",
+      "min": "https://raw.github.com/ivaynberg/select2/{version}/select2.min.js",
+      "versioned": true
     }
   }
 }
