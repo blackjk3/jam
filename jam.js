@@ -76,6 +76,7 @@ module.exports = {
             bundler.bundle();
           }
           else if ( program.add ) {
+            
             var optPath = '',
                 min = program.minified ?  true : false;
             
