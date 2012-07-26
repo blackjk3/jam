@@ -12,20 +12,6 @@ var q = require('q'),
 commands.root = root;
 commands.jaws_root = __dirname;
 
-//
-// private helpers
-//
-function readFile( path, cb ) {
-    fs.readFile(path, function(err, data) {
-      if(err) {
-        console.error("Could not open file: ", path);
-        process.exit(1);
-      } else {
-        cb( data.toString('utf8'));
-      }
-    });
-}
-
 /**
  * watchProject()
  * @return {[null]} [Creates a new view based on template]
@@ -76,7 +62,7 @@ module.exports = {
             bundler.bundle();
           }
           else if ( program.add ) {
-            
+
             var optPath = '',
                 min = program.minified ?  true : false;
             

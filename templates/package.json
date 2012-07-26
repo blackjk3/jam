@@ -1,9 +1,14 @@
 {
   "jaws": {
-    "baseUrl": "www/js",
+    "baseUrl": "js",
+    "vendorPath": "js/vendor",
     
+    "jamSource": "https://raw.github.com/blackjk3/jam/master/repos/repos.json",
     "dependencies": {
-      "jquery": "1.7.1"
+      "jquery": {
+        "version": "1.7.1",
+        "minified": true
+      }
     }
   }
 }
