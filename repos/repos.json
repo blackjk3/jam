@@ -13,9 +13,9 @@
     },
     "chosen" : {
       "github": "harvesthq/chosen",
-      "url": "https://raw.github.com/harvesthq/chosen/{version}/chosen.jquery.js",
-      "min": "https://raw.github.com/harvesthq/chosen/{version}/chosen.jquery.min.js",
-      "versioned": true 
+      "url": "https://raw.github.com/harvesthq/chosen/{version}/chosen/chosen.jquery.js",
+      "min": "https://raw.github.com/harvesthq/chosen/{version}/chosen/chosen.jquery.min.js",
+      "versioned": true
     },
     "jquery" : {
       "github": "jquery/jquery",
@@ -63,6 +63,12 @@
       "github": "ivaynberg/select2",
       "url": "https://raw.github.com/ivaynberg/select2/{version}/select2.js",
       "min": "https://raw.github.com/ivaynberg/select2/{version}/select2.min.js",
+      "versioned": true
+    },
+    "impress" : {
+      "github": "bartaz/impress.js",
+      "url": "https://raw.github.com/bartaz/impress.js/{version}/js/impress.js",
+      "min": "https://raw.github.com/bartaz/impress.js/{version}/js/impress.js",
       "versioned": true
     }
   }

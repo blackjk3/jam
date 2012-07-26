@@ -75,6 +75,12 @@ To grab a minified version it is as easy as adding the -m flag.
 jam add -m moment
 ```
 
+To grab a specific version add the -v flag, followed by the version number.
+
+```javascript
+jam add moment -v 1.6.2
+```
+
 If you run the add command from a rails project root jam can help with that.  If jam detects rails it will prompt with the following
 
 ```javascript
