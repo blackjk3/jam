@@ -27,7 +27,7 @@ module.exports = {
           .option('bundle, --bundle', 'Updates dependencies based on package.json file.')
           .option('add, --add', 'Adds a dependency into the current directory.')
           .option('-m, --minified', 'Flag to get minified version when adding.')
-          .option('-v, --version <version>', 'Flag to get a specific version when adding.')
+          .option('-v, --ver <version>', 'Flag to get a specific version when adding.')
           .parse(process.argv);
         
         if ( process.argv.length === 2 ) {
@@ -54,7 +54,8 @@ module.exports = {
           else if ( program.add ) {
             
             var optPath = '',
-                min = program.minified ?  true : false;
+                min = program.minified ?  true : false,
+                version = program.ver ? program.ver : false;
             
             bundler.onRails().then(function( rails ) {
               if ( rails ) {
@@ -63,12 +64,12 @@ module.exports = {
                   if ( ok ) {
                     optPath = 'vendor/assets/javascripts/';
                   }
-                  
-                  bundler.add( program.args[0], min, optPath, program.version );
+
+                  bundler.add( program.args[0], min, optPath, version );
                   process.stdin.destroy();
                 });
               } else {
-                bundler.add( program.args[0], min, '', program.version );
+                bundler.add( program.args[0], min, '', version );
               }
             });
           }

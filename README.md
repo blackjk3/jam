@@ -2,7 +2,7 @@
 
 JavaScript Application Manager
 
-# Clone & Install
+# Hacking on JAM - Clone & Install
 git clone git@github.com:blackjk3/jam.git
 
 Run npm install to install node modules.
