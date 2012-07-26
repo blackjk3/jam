@@ -93,11 +93,17 @@ If you respond "y" then jam will store the asset in vendor folder that rails use
 
 ```javascript
 jam g view index
+
+ * Creating new view: index
+ * Created: js/app/views/index.js
+ * Created: js/app/templates/index.html
+ * Created: js/app/helpers/index_helper.js
 ```
 
 # Generating a backbone model
 
 ```javascript
 jam g model index
+  * Created: js/app/models/index.js
 ```
 

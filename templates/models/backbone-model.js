@@ -1,8 +1,8 @@
-define([], function () {
+ define([], function () {
   
-  var <%= capitalize(view) %>Model = Backbone.Model.extend({
+  var <%= capitalize(model) %>Model = Backbone.Model.extend({
     // Add model logic
   });
 
-  return <%= capitalize(view) %>Model;
+  return <%= capitalize(model) %>Model;
 });
